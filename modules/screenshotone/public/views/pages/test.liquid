@@ -9,15 +9,19 @@ slug: shoot_test
     assign table = "modules/example/table"
     assign name = "example_name"
     assign url = "https://www.example.com"
+    assign image = null
+
 
 %}
 
 {% liquid
-    function shoot =  "modules/screenshotone/shoot", url: url
-    graphql uploaded_image = "modules/screenshotone/upload_screenshot", id: id, remote_url: shoot.cache_url, name: name
-    print uploaded_image
-    assign url = uploaded_image | dig: "record_update", "image", "url"
+    function result = "modules/screenshotone/shoot",
+      table: table,
+      id: id,
+      url: url,
+      name: name,
+      image: image
+    assign url = result | dig: "record_update", "image", "url"
 %}
-
 
 <img src="{{ url }}" alt="Screenshot">
