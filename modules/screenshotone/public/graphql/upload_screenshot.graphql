@@ -1,0 +1,33 @@
+mutation upload_screenshot(
+  $id: ID!, 
+  $remote_url: String!,
+  $table: String!,
+  $name: String!
+) {
+  record_update(
+    id: $id
+    record: {
+      table: $table, 
+      properties: {
+        name: "image", value_upload: 
+        {
+          file_path: $name 
+          #content_disposition: "inline", 
+          type: image, 
+          remote_url: $remote_url, 
+          # content_type: "image/jpg", 
+          #synchronous: true, 
+          acl: public
+        }
+      }
+    }
+  ) {
+    id
+    updated_at
+    image: property_upload(name: "image") {
+      url
+      extension
+      file_name
+    }
+  }
+}

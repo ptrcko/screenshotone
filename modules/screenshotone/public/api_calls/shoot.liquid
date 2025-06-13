@@ -1,0 +1,9 @@
+---
+name: shoot
+to: >
+    {% capture path %} 
+        https://api.screenshotone.com/take?access_key={{ context.constants.screenshot_one_access_key }}&{{- data.params -}}
+    {% endcapture %}
+    {{path}}
+request_type: Get
+---

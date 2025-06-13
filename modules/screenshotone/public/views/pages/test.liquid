@@ -1,0 +1,23 @@
+---
+slug: shoot_test
+---
+{% liquid
+    comment 
+        update these variables to point to a database record and url to test 
+    endcomment
+    assign id = 1234 
+    assign table = "modules/example/table"
+    assign name = "example_name"
+    assign url: "ttps://www.example.com"
+
+%}
+
+{% liquid
+    function shoot =  "modules/screenshotone/shoot", url: url
+    graphql uploaded_image = "modules/screenshotone/upload_screenshot", id: id, remote_url: shoot.cache_url, name: name
+    print ploaded_image
+    assign url = uploaded_image | dig: "record_update", "image", "url"
+%}
+
+
+<img src="{{ url }}" alt="Screenshot">

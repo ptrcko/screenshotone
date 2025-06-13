@@ -1,0 +1,63 @@
+{% comment %}
+    params:
+        table - name of table to upload image to
+        id - id of record to update
+        url - url of website to take picture of
+        name - name property to use (will be slugified)
+        image ~ property to check if an image exists
+{% endcomment %}
+
+{% liquid
+    log image, type: "image"
+    if image != null
+    log "image exists", type: "image check"
+    return 
+    endif
+%}
+
+
+{%- parse_json params -%}
+{ 
+    "url": {{ url | json }},
+    "format": "jpg",
+    "block_ads": "true",
+    "block_cookie_banners":"true",
+    "block_banners_by_heuristics":"true",
+    "block_trackers":"true",
+    "delay": "0",
+    "timeout":"60",
+    "response_type":"json",
+    "image_quality":"80",
+    "image_width": "500",
+    "viewport_width": "1200",
+    "viewport_height": "1200",
+    "cache": "true",
+    "cache_ttl": "604800"
+}
+{%- endparse_json -%}
+{% assign params = params | querify %}
+{% parse_json data %}{}{% endparse_json %}
+{% hash_assign data["params"] = params %}
+{% log params, type:"params" %}
+{% liquid 
+    
+    graphql shoot = 'modules/website/trigger_api_call', name: 'modules/screenshotone/shoot', data: data 
+    assign shoot = shoot | dig: 'items','response','body' | parse_json
+    assign name = id | append: "-" | append: name | slugify | append: ".png" 
+%}
+{% log shoot, type: "shoot"%}
+{% parse_json args %}
+    {
+        "table": {{ table | json }},
+        "id": {{ id | json }},
+        "name": {{ name | json }},
+        "remote_url": {{ shoot.cache_url | json }}
+    }
+{% endparse_json %}
+{% log args, type:"args" %}
+{% graphql updated_record = "modules/screenshotone/upload_screenshot", args: args %}
+{% log updated_record, type: "updated_record" %}
+{% return updated_record %}
+
+
+
