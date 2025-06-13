@@ -1,6 +1,6 @@
 # ScreenshotOne Module for PlatformOS
 
-This repository contains a standalone PlatformOS / inSites module that creates website thumbnails using [ScreenshotOne](https://screenshotone.com/).
+This repository contains a standalone PlatformOS / Insites module that creates website thumbnails using [ScreenshotOne](https://screenshotone.com/).
 
 ## Overview
 
